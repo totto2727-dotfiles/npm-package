@@ -5,7 +5,8 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   };
 
-  outputs = { self, nixpkgs, ... }:
+  outputs =
+    { self, nixpkgs, ... }:
     let
       # Define supported systems
       supportedSystems = [
@@ -19,9 +20,12 @@
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
 
       # Get the npm-utils for each system
-      npmUtilsFor = forAllSystems (system: import ./lib/npm-utils.nix {
-        pkgs = nixpkgs.legacyPackages.${system};
-      });
+      npmUtilsFor = forAllSystems (
+        system:
+        import ./lib/npm-utils.nix {
+          pkgs = nixpkgs.legacyPackages.${system};
+        }
+      );
     in
     {
       # Expose the library functions
@@ -29,17 +33,18 @@
         npmPackage = npmUtilsFor.${system}.npmPackage;
       });
 
-      
-      devShells = forAllSystems (system:
-      let
-        pkgs = nixpkgs.legacyPackages.${system};
-      in
-      {
-        default = pkgs.mkShell {
-          buildInputs = with pkgs; [
-            gh
-          ];
-        };
-      });
-  };
+      devShells = forAllSystems (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        {
+          default = pkgs.mkShell {
+            buildInputs = with pkgs; [
+              gh
+            ];
+          };
+        }
+      );
+    };
 }

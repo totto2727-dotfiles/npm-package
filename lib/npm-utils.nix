@@ -14,6 +14,6 @@
     in
       # Create a simple wrapper script that uses npx
       pkgs.writeShellScriptBin actualBinName ''
-        exec safe-chain bun x --bun--yes ${packageName}@${version} "$@"
+        safe-chain bun x --bun --yes ${packageName}@${version} "$@"
       '';
 }

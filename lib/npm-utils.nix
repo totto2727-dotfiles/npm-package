@@ -14,19 +14,6 @@
     in
       # Create a simple wrapper script that uses npx
       pkgs.writeShellScriptBin actualBinName ''
-        # Set npm log level to error to suppress update notices
-        export npm_config_loglevel=error
-        
-        # Make sure scripts can find 'node' by creating a PATH with both 'node' and 'nodejs'
-        export PATH="${pkgs.lib.makeBinPath [ pkgs.nodejs ]}:$PATH"
-        
-        # Tell npx explicitly where to find node
-        export NODE="${pkgs.nodejs}/bin/node"
-
-        # Use bash for shell
-        export SHELL="${pkgs.bash}/bin/bash"
-        
-        # Use npx to run the package without installing it globally
-        exec ${pkgs.nodejs}/bin/npx --node "$NODE" --yes ${packageName}@${version} "$@"
+        exec safe-chain bun x --bun--yes ${packageName}@${version} "$@"
       '';
 }

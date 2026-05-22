@@ -6,7 +6,7 @@
       binName,
       packageName,
       version ? "latest",
-      runtime ? "node",
+      runtime ? "bun",
       registry ? "https://npm.flatt.tech",
       additionalArgs ? "",
     }:
@@ -17,13 +17,13 @@
           export npm_config_loglevel=error
           export npm_config_registry=${registry}
           export PATH="${pkgs.lib.makeBinPath [ pkgs.nodejs ]}:$PATH"
-          export NODE="${pkgs.nodejs}/bin/node"
-          export SHELL="${pkgs.bash}/bin/bash"
-          exec ${pkgs.nodejs}/bin/npx --node "$NODE" --yes ${additionalArgs} ${packageSpec} "$@"
+          exec ${pkgs.nodejs}/bin/npx --yes ${additionalArgs} ${packageSpec} "$@"
         '';
         bun = ''
+          export npm_config_loglevel=error
           export npm_config_registry=${registry}
-          exec ${pkgs.bun}/bin/bunx --yes ${additionalArgs} ${packageSpec} "$@"
+          export PATH="${pkgs.lib.makeBinPath [ pkgs.bun ]}:$PATH"
+          exec ${pkgs.bun}/bin/bunx --bun --yes ${additionalArgs} ${packageSpec} "$@"
         '';
       };
       script =
